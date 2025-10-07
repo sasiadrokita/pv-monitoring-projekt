@@ -4,7 +4,7 @@
 
 **Auftraggeber:** Herr Max Mustermann, EcoEnergy Solutions GmbH
 
-**Datum:** [Aktuelles Datum]
+**Datum:** 07.10.25
 **Version:** 1.0
 
 ---
@@ -44,3 +44,4 @@ Das Projekt umfasst nicht die Steuerung der PV-Anlage oder die Integration von e
 4.  Integration und Test (Datenfluss Modbus -> MQTT -> InfluxDB -> Grafana).
 5.  Fertigstellung der Pflichtenheft- und Betrieblichen Dokumentation.
 6.  Projektabschluss und Präsentation.
+
