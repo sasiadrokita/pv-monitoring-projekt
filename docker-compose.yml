@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # 1. MQTT Broker
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"  # Port für MQTT-Kommunikation
+    volumes:
+      - ./docker/mosquitto/config:/mosquitto/config
+      - ./docker/mosquitto/data:/mosquitto/data
+      - ./docker/mosquitto/log:/mosquitto/log
+    networks:
+      - pv-net
+
+  # 2. Zeitreihendatenbank
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086" # Port für die InfluxDB API
+    volumes:
+      - ./docker/influxdb/data:/var/lib/influxdb2
+      - ./docker/influxdb/config:/etc/influxdb2
+    environment:
+      # Diese Umgebungsvariablen sind für das initiale Setup von InfluxDB 2.x notwendig.
+      # Ändere das Passwort und den Token in einem echten Projekt!
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminadmin # BITTE ÄNDERN
+      - DOCKER_INFLUXDB_INIT_ORG=eco-energy-solutions
+      - DOCKER_INFLUXDB_INIT_BUCKET=pv_data
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-token # BITTE ÄNDERN
+    networks:
+      - pv-net
+
+  # 3. Visualisierungs-Tool
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000" # Port für das Grafana Web-Interface
+    volumes:
+      - ./docker/grafana/data:/var/lib/grafana
+    depends_on:
+      - influxdb # Grafana startet erst, wenn InfluxDB bereit ist
+    networks:
+      - pv-net
+
+# Definition des gemeinsamen Netzwerks für die Container
+networks:
+  pv-net:
+    driver: bridge
+
+  # 4. PV-Anlagen-Simulator
+  pv-simulator:
+    build:
+      context: ./src  # Pfad zum Verzeichnis mit dem Dockerfile
+    container_name: pv-simulator
+    restart: unless-stopped
+    depends_on:
+      - mosquitto # Der Simulator startet erst, wenn der MQTT-Broker läuft
+    networks:
+      - pv-net
+    environment:
+      # Hier können wir die Konfiguration des Skripts von außen steuern
+      - MQTT_BROKER_HOST=mosquitto
+      - MQTT_TOPIC=pv/anlage/data
+      - SIMULATION_INTERVAL=5
+
