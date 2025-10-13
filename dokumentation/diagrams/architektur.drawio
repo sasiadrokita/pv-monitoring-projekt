@@ -1,0 +1,100 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
+  <diagram name="Seite-1" id="ICoqN8tYNrdBl4aqTWWL">
+    <mxGraphModel dx="1206" dy="1280" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FSuHudSppzpCFkSnoJuG-6" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="40" y="110" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="FSuHudSppzpCFkSnoJuG-6">
+          <mxGeometry width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-2" value="" style="endArrow=none;html=1;rounded=0;entryX=1;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="FSuHudSppzpCFkSnoJuG-6" source="FSuHudSppzpCFkSnoJuG-1" target="FSuHudSppzpCFkSnoJuG-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="10" y="70" as="sourcePoint" />
+            <mxPoint x="60" y="20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-3" value="DC" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="FSuHudSppzpCFkSnoJuG-6">
+          <mxGeometry x="20" y="20" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-5" value="AC" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="FSuHudSppzpCFkSnoJuG-6">
+          <mxGeometry x="50" y="60" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="310" height="810" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-11" value="&lt;b&gt;Grafana&lt;/b&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="390" y="760" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-12" value="&lt;b&gt;InfluxDB&lt;/b&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="390" y="535" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-13" value="&lt;b&gt;MQTT-Broker&lt;/b&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="390" y="330" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-14" value="&lt;b&gt;PV- Simulator&lt;/b&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="390" y="120" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-15" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Docker -Umgebung&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="490" y="110" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-16" value="" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=0.99;exitY=0.57;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="FSuHudSppzpCFkSnoJuG-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="360" as="sourcePoint" />
+            <mxPoint x="390" y="167" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-22" value="&lt;i&gt;Moodbus RTU (via RS-485)&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="130" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-24" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="FSuHudSppzpCFkSnoJuG-14" target="FSuHudSppzpCFkSnoJuG-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="166.5" y="460" as="sourcePoint" />
+            <mxPoint x="216.5" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-25" value="&lt;i&gt;MQTT Publish (Topic: pv/anlage/data)&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="450" y="250" width="139.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-26" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="FSuHudSppzpCFkSnoJuG-13" target="FSuHudSppzpCFkSnoJuG-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="540" as="sourcePoint" />
+            <mxPoint x="430" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-27" value="&lt;i&gt;MQTT Subscribe&lt;/i&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="460" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-28" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="FSuHudSppzpCFkSnoJuG-12" target="FSuHudSppzpCFkSnoJuG-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="700" as="sourcePoint" />
+            <mxPoint x="460" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-29" value="&lt;i&gt;Datenabfrage (Flux-Query)&lt;/i&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="670" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-30" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Wechselrichter (PV-Anlage)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="10" y="58" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-31" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Raspberry Pi 4 (pv-server)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="380" y="23" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-32" value="" style="image;html=1;image=img/lib/clip_art/computers/MacBook_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="40" y="735" width="130" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-33" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="FSuHudSppzpCFkSnoJuG-11" target="FSuHudSppzpCFkSnoJuG-32">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="550" y="500" as="sourcePoint" />
+            <mxPoint x="600" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FSuHudSppzpCFkSnoJuG-34" value="&lt;span style=&quot;color: rgb(52, 54, 61); font-family: &amp;quot;DM Mono&amp;quot;, &amp;quot;DM Mono Fallback&amp;quot;, monospace; text-align: start; background-color: rgb(237, 240, 248);&quot;&gt;&lt;b style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;http://192.168.1.123:3000&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="750" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
