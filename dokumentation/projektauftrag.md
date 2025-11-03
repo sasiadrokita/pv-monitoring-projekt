@@ -1,68 +1,57 @@
-# Lastenheft: PV-Anlagen-Überwachungssystem
+1. Ausgangssituation und Projektidee
 
-**Projekt:** PV-Monitoring-System (EcoEnergy Solutions)  
-**Auftraggeber:** Herr Max Mustermann, EcoEnergy Solutions GmbH  
-**Version:** 1.0  
-**Datum:** 08.10.2025
+Die Leistungsdaten der firmeneigenen Photovoltaik-Anlage werden aktuell manuell und nur lokal am Wechselrichter abgelesen. Dieser Prozess ist zeitaufwendig und erlaubt keine kontinuierliche Überwachung oder historische Auswertung der Anlageneffizienz. Bei Störungen oder Leistungsabfällen erfolgt eine Reaktion nur mit erheblicher Verzögerung.
 
----
+Die Idee dieses Abschlussprojekts ist die Entwicklung einer eigenständigen, kosteneffizienten und wartungsarmen Lösung zur automatisierten Erfassung und Visualisierung dieser Betriebsdaten in Echtzeit.
 
-## 1. Einleitung und Zielsetzung
+2. Projektziele
 
-Dieses Dokument beschreibt die Anforderungen an ein Echtzeit-Überwachungssystem für eine bestehende Photovoltaik-Anlage. Ziel ist die digitale Erfassung, Speicherung und Visualisierung von Leistungsdaten, um eine effiziente Wartung und Fehleranalyse zu ermöglichen. Das System soll kostengünstig, wartungsarm und auf Basis von Open-Source-Technologien realisiert werden.
+Hauptziel:
+Die Erstellung eines voll funktionsfähigen Prototyps für ein Monitoring-System, das die Daten einer PV-Anlage erfasst, speichert und in einem webbasierten Dashboard visualisiert.
 
-## 2. Ist-Zustand
+Funktionale Ziele:
 
-Die aktuellen Leistungsdaten der PV-Anlage können nur manuell und lokal am Wechselrichter abgelesen werden. Es gibt keine zentrale Datenerfassung, keine Langzeitarchivierung und keine Möglichkeit zur Fernüberwachung oder automatischen Benachrichtigung bei Störungen.
+Automatische Datenerfassung: Das System soll selbstständig und in regelmäßigen Intervallen Daten direkt vom Wechselrichter auslesen.
+Zentrale Visualisierung: Die erfassten Daten (aktuelle Leistung, Tagesertrag etc.) sollen über einen Webbrowser in Form von Graphen und Anzeigen zugänglich gemacht werden.
+Proaktive Alarmierung: Bei signifikanten Störungen (z.B. starker Leistungsabfall) soll das System automatisch eine Benachrichtigung per E-Mail versenden können.
+Modulare Architektur: Die gesamte Software-Lösung soll auf Open-Source-Technologien basieren und mithilfe von Docker-Containern aufgebaut werden. Dies gewährleistet eine hohe Wartbarkeit und einfache Skalierbarkeit für die Zukunft.
+Nicht-Ziele (Was ist nicht Teil des Projekts?):
 
-## 3. Funktionale Anforderungen (Was soll das System tun?)
+Die aktive Steuerung der PV-Anlage.
+Funktionen zur Abrechnung oder Einspeisevergütungsberechnung.
+3. Erwarteter Nutzen
 
-### 3.1 Datenerfassung
-- **FR-01:** Das System muss in der Lage sein, die Daten vom Wechselrichter der PV-Anlage auszulesen.
-- **FR-02:** Die Kommunikation mit dem Wechselrichter muss über die serielle Schnittstelle Modbus RTU (via RS-485) erfolgen.
-- **FR-03:** Folgende Parameter müssen erfasst werden:
-    - Spannung (V)
-    - Strom (A)
-    - Aktuelle Leistung (W)
-    - Tagesertrag (kWh)
-- **FR-04:** Die Datenerfassung soll in einem regelmäßigen Intervall von 5 bis 10 Sekunden erfolgen.
+Der Nutzen des Projekts liegt in der Steigerung der Betriebssicherheit und Effizienz der PV-Anlage. Durch die Echtzeit-Überwachung und automatische Alarmierung können Ertragsverluste minimiert werden. Zudem wird der manuelle Kontrollaufwand erheblich reduziert. Das Projekt schafft eine wertvolle Datengrundlage für zukünftige Optimierungen und dient als skalierbarer Prototyp für weitere Anlagen.
 
-### 3.2 Datenübertragung und -speicherung
-- **FR-05:** Die erfassten Daten müssen über das MQTT-Protokoll im lokalen Netzwerk veröffentlicht werden.
-- **FR-06:** Die Daten sollen in einer Zeitreihendatenbank (Time-Series Database) persistent gespeichert werden.
-- **FR-07:** Die Datenhistorie muss für einen Zeitraum von mindestens 30 Tagen aufbewahrt werden.
+4. Benötigte Ressourcen zur Projektdurchführung
 
-### 3.3 Datenvisualisierung
-- **FR-08:** Es muss ein web-basiertes Dashboard zur Visualisierung der Daten bereitgestellt werden.
-- **FR-09:** Das Dashboard soll die aktuellen Werte sowie historische Verläufe der erfassten Parameter (siehe FR-03) in Form von Graphen und Anzeigen darstellen.
-- **FR-10:** Das Dashboard muss über einen Standard-Webbrowser im Firmennetzwerk erreichbar sein.
+Um dieses Projekt erfolgreich realisieren zu können, werden die folgenden Sachmittel benötigt. Die Auswahl zielt auf eine zuverlässige und für den 24/7-Dauerbetrieb ausgelegte Lösung ab.
 
-### 3.4 Alarmierung
-- **FR-11:** Das System soll eine Funktion zur Konfiguration von Alarmen bieten.
-- **FR-12:** Bei einem signifikanten Leistungsabfall oder Ausfall der Datenerfassung soll automatisch eine Benachrichtigung per E-Mail an einen konfigurierbaren Empfänger gesendet werden.
 
-## 4. Nicht-funktionale Anforderungen (Wie gut soll das System sein?)
+a) Hardware
 
-- **NFR-01 (Performance):** Das System muss die Daten in Echtzeit (mit der in FR-04 definierten Latenz) verarbeiten und darstellen können.
-- **NFR-02 (Zuverlässigkeit):** Das System soll stabil und für den Dauerbetrieb (24/7) ausgelegt sein. Nach einem Stromausfall oder Neustart müssen alle Dienste automatisch wieder anlaufen.
-- **NFR-03 (Wartbarkeit):** Die gesamte Software-Infrastruktur (Datenbank, MQTT-Broker, Visualisierungs-Tool) muss über Docker-Container verwaltet werden. Eine zentrale Konfigurationsdatei (Docker Compose) soll den Start, Stopp und die Aktualisierung aller Dienste ermöglichen.
-- **NFR-04 (Kosteneffizienz):** Die Lösung soll auf kostengünstiger Hardware (Raspberry Pi) und primär auf Open-Source-Software basieren.
+Kernkomponenten (Edge-Device):
 
-## 5. Lieferumfang
+1x Edge-Computer: Raspberry Pi 4 (4 GB RAM) oder neuer.
+Begründung: Bietet ausreichend Leistung für die parallele Ausführung der benötigten Dienste (Datenbank, Webserver etc.).
+1x Stromversorgung: Offizielles USB-C Netzteil.
+Begründung: Eine stabile Stromversorgung ist kritisch, um Systemabstürze und Datenkorruption zu vermeiden.
+1x Speichermedium: High-Endurance microSD-Karte (mind. 32 GB).
+Begründung: Diese Karten sind für den Dauerbetrieb ausgelegt und haben eine höhere Lebensdauer als Standardkarten.
+1x Gehäuse: Gehäuse mit passiver oder aktiver Kühlung.
+Begründung: Gewährleistet die thermische Stabilität im Dauerbetrieb und verhindert Leistungsverluste durch Überhitzung.
+Schnittstellen-Hardware:
 
-1.  Vollständig konfigurierte Software-Umgebung auf einem Raspberry Pi 4.
-2.  Ein Python-Skript zur Auslesung der Modbus-Daten und Veröffentlichung via MQTT.
-3.  Eine Docker-Compose-Konfiguration zum Starten aller benötigten Dienste.
-4.  Ein vorkonfiguriertes Grafana-Dashboard zur Visualisierung.
-5.  Eine vollständige technische Dokumentation, bestehend aus:
-    - Lastenheft (dieses Dokument)
-    - Pflichtenheft
-    - Betriebliche Dokumentation (Installations- und Wartungsanleitung)
+1x USB-zu-RS485-Adapter:
+Begründung: Wird zur physischen Anbindung an die serielle Schnittstelle (Modbus RTU) des Wechselrichters benötigt.
+Optionale Empfehlung für erhöhte Langlebigkeit:
 
-## 6. Abnahmekriterien
+1x Externe USB-SSD (mind. 128 GB):
+Begründung: Zur Auslagerung der Datenbank, um die microSD-Karte zu schonen und die Lebensdauer des Gesamtsystems zu maximieren.
 
-Das Projekt gilt als erfolgreich abgeschlossen, wenn:
-- alle unter Punkt 3 und 4 genannten Anforderungen nachweislich erfüllt sind.
-- der Datenfluss vom Wechselrichter bis zum Dashboard stabil und korrekt funktioniert.
-- die Dokumentation vollständig und verständlich ist.
-- eine erfolgreiche Präsentation und Übergabe des Systems stattgefunden hat.
+
+b) Software
+
+Für dieses Projekt wird ausschließlich lizenzkostenfreie Open-Source-Software verwendet. Es fallen keine zusätzlichen Softwarekosten an.
+Technologie-Stack: Docker, Python, InfluxDB (Datenbank), Grafana (Visualisierung), Mosquitto (MQTT).
+Zugang: Administratorrechte auf dem Entwicklungsrechner zur Installation der benötigten Entwicklungswerkzeuge (z.B. VS Code).
