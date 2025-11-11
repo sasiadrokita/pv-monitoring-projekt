@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Schritt 4: Den Quellcode der Anwendung kopieren
-COPY . .
+COPY src/ .
 
 # Schritt 5: Den Befehl zum Starten der Anwendung definieren
 # Dieser Befehl wird ausgeführt, wenn der Container startet.

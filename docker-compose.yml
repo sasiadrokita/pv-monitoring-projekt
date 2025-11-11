@@ -7,7 +7,7 @@ services:
     container_name: mosquitto
     restart: unless-stopped
     ports:
-      - "1883:1883"  # Port für MQTT-Kommunikation
+      - "1883:1883"
     volumes:
       - ./docker/mosquitto/config:/mosquitto/config
       - ./docker/mosquitto/data:/mosquitto/data
@@ -21,19 +21,17 @@ services:
     container_name: influxdb
     restart: unless-stopped
     ports:
-      - "8086:8086" # Port für die InfluxDB API
+      - "8086:8086"
     volumes:
       - ./docker/influxdb/data:/var/lib/influxdb2
       - ./docker/influxdb/config:/etc/influxdb2
     environment:
-      # Diese Umgebungsvariablen sind für das initiale Setup von InfluxDB 2.x notwendig.
-      # Ändere das Passwort und den Token in einem echten Projekt!
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=adminadmin # BITTE ÄNDERN
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminadmin
       - DOCKER_INFLUXDB_INIT_ORG=eco-energy-solutions
       - DOCKER_INFLUXDB_INIT_BUCKET=pv_data
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-token # BITTE ÄNDERN
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-token
     networks:
       - pv-net
 
@@ -43,32 +41,34 @@ services:
     container_name: grafana
     restart: unless-stopped
     ports:
-      - "3000:3000" # Port für das Grafana Web-Interface
+      - "3000:3000"
     volumes:
       - ./docker/grafana/data:/var/lib/grafana
     depends_on:
-      - influxdb # Grafana startet erst, wenn InfluxDB bereit ist
+      - influxdb
     networks:
       - pv-net
-
-# Definition des gemeinsamen Netzwerks für die Container
-networks:
-  pv-net:
-    driver: bridge
 
   # 4. PV-Anlagen-Simulator
   pv-simulator:
     build:
-      context: ./src  # Pfad zum Verzeichnis mit dem Dockerfile
+      context: .
+      dockerfile: src/Dockerfile
     container_name: pv-simulator
     restart: unless-stopped
     depends_on:
-      - mosquitto # Der Simulator startet erst, wenn der MQTT-Broker läuft
+      - mosquitto
     networks:
       - pv-net
     environment:
-      # Hier können wir die Konfiguration des Skripts von außen steuern
       - MQTT_BROKER_HOST=mosquitto
       - MQTT_TOPIC=pv/anlage/data
       - SIMULATION_INTERVAL=5
 
+# Sekcja sieci na NAJWYŻSZYM poziomie (bez wcięć)
+networks:
+  pv-net:
+    driver: bridge
+
+# Możemy też dodać sekcję woluminów, jeśli chcemy, aby były zarządzane przez Dockera
+# Ale zostawmy to na razie, twoja konfiguracja z bind mounts jest OK.
