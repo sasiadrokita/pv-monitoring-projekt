@@ -65,6 +65,19 @@ services:
       - MQTT_TOPIC=pv/anlage/data
       - SIMULATION_INTERVAL=5
 
+  # 5. Telegraf
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    restart: unless-stopped
+    volumes:
+      - ./docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - mosquitto
+      - influxdb
+    networks:
+      - pv-net
+
 # Sekcja sieci na NAJWYŻSZYM poziomie (bez wcięć)
 networks:
   pv-net:
