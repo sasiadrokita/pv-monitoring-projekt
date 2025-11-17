@@ -78,7 +78,7 @@ services:
     networks:
       - pv-net
 
-# Sekcja sieci na NAJWYŻSZYM poziomie (bez wcięć)
+# Network
 networks:
   pv-net:
     driver: bridge

@@ -115,3 +115,12 @@ Now that Docker is installed and the project is cloned, you can start all the se
 # This command reads the docker-compose.yml file, builds the custom pv-simulator image,
 # and starts all containers in the background.
 docker compose up -d --build
+
+
+---
+
+## (Optional) Remote Access Setup
+
+For users who wish to access the Grafana dashboard from outside their local network, a detailed guide on setting up a persistent, secure tunnel via Cloudflare is available. This setup is simple and does not require any router configuration.
+
+➡️ **[View the Remote Access Setup Guide](./REMOTE_ACCESS_SETUP.md)**
