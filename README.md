@@ -124,3 +124,10 @@ docker compose up -d --build
 For users who wish to access the Grafana dashboard from outside their local network, a detailed guide on setting up a persistent, secure tunnel via Cloudflare is available. This setup is simple and does not require any router configuration.
 
 ➡️ **[View the Remote Access Setup Guide](./REMOTE_ACCESS_SETUP.md)**
+---
+
+## (Optional) Alerting Setup
+
+A comprehensive guide on how to configure critical system health alerts via Telegram is available. This allows you to be notified immediately if the system stops sending data.
+
+➡️ **[View the Alerting Setup Guide](./ALERTS_SETUP.md)**
