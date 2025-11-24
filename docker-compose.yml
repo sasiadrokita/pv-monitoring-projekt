@@ -46,6 +46,8 @@ services:
       - ./docker/grafana/data:/var/lib/grafana
     depends_on:
       - influxdb
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
     networks:
       - pv-net
 
@@ -60,6 +62,8 @@ services:
       - mosquitto
     networks:
       - pv-net
+    volumes:
+      - ./docker/pv_simulator_data:/app/data
     environment:
       - MQTT_BROKER_HOST=mosquitto
       - MQTT_TOPIC=pv/anlage/data

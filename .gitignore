@@ -12,3 +12,6 @@ data/
 
 # Docker
 .DS_Store
+
+# Simulation data
+docker/pv_simulator_data/
