@@ -131,3 +131,13 @@ For users who wish to access the Grafana dashboard from outside their local netw
 A comprehensive guide on how to configure critical system health alerts via Telegram is available. This allows you to be notified immediately if the system stops sending data.
 
 ➡️ **[View the Alerting Setup Guide](./ALERTS_SETUP.md)**
+
+
+---
+
+## (Optional) Automatic URL Notification
+
+Since Quick Tunnels generate a new URL on every restart, you can set up an automatic notification script that sends the new link directly to your phone via Telegram whenever the Raspberry Pi boots up.
+
+➡️ **[View the Telegram Notifier Setup Guide](./TELEGRAM_NOTIFIER_SETUP.md)**
+
