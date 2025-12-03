@@ -117,6 +117,8 @@ Now that Docker is installed and the project is cloned, you can start all the se
 docker compose up -d --build
 
 
+- **Self-Healing Watchdog**: An automated script monitors system health. It attempts to restart Docker containers (Soft Reset) or reboots the system (Hard Reset) if data collection stops.
+
 ---
 
 ## (Optional) Remote Access Setup
