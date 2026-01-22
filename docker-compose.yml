@@ -64,10 +64,14 @@ services:
       - pv-net
     volumes:
       - ./docker/pv_simulator_data:/app/data
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
     environment:
       - MQTT_BROKER_HOST=mosquitto
       - MQTT_TOPIC=pv/anlage/data
-      - SIMULATION_INTERVAL=5
+#      - SIMULATION_INTERVAL=5
+      - MODBUS_PORT=/dev/ttyUSB0
+      - MODBUS_BAUDRATE=2400        # SDM120 zazwyczaj ma 2400
 
   # 5. Telegraf
   telegraf:

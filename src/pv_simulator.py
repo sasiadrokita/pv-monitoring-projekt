@@ -1,163 +1,186 @@
-import paho.mqtt.client as mqtt
+import os
 import time
 import json
-import random
-import os
-import math
+import logging
 from datetime import datetime
+import paho.mqtt.client as mqtt
+from pymodbus.client import ModbusSerialClient
+from pymodbus.payload import BinaryPayloadDecoder
+from pymodbus.constants import Endian
 
-# --- Konfiguracja ---
-MQTT_BROKER_HOST = os.getenv("MQTT_BROKER_HOST", "localhost")
+# --- KONFIGURACJA ---
+# MQTT
+MQTT_BROKER = os.getenv("MQTT_BROKER_HOST", "mosquitto")
 MQTT_TOPIC = os.getenv("MQTT_TOPIC", "pv/anlage/data")
-SIMULATION_INTERVAL = int(os.getenv("SIMULATION_INTERVAL", 5))
+# Modbus (Licznik SDM120)
+MODBUS_PORT = os.getenv("MODBUS_PORT", "/dev/ttyUSB0")
+MODBUS_BAUDRATE = int(os.getenv("MODBUS_BAUDRATE", 2400))
+SLAVE_ID = 1
 
-# Ścieżka do pliku, w którym zapiszemy stan licznika
-STATE_FILE = "/app/data/simulation_state.json"
+# Plik do zapisu stanu (żeby pamiętać stan licznika o północy)
+# Ścieżka /app/data musi być zmapowana w docker-compose volumes
+STATE_FILE = "/app/data/meter_state.json"
 
-# Parametry instalacji
-MAX_POWER_W = 3000.0
-MPP_VOLTAGE_OPTIMAL = 450.0
-MPP_VOLTAGE_MIN = 250.0
-MPP_VOLTAGE_MAX = 550.0
+# Konfiguracja logowania
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
-# Parametry czasu
-SUNRISE_HOUR = 6
-SUNSET_HOUR = 20
-
-# --- Zmienne stanu (domyślne) ---
-tagesertrag_kwh = 0.0
+# --- ZMIENNE STANU ---
+midnight_counter_kwh = 0.0  # Stan licznika o północy
 last_reset_day = -1
-current_mpp_voltage = MPP_VOLTAGE_OPTIMAL
 
 def load_state():
-    """Wczytuje stan symulacji z pliku JSON przy starcie."""
-    global tagesertrag_kwh, last_reset_day
+    """Wczytuje stan początkowy (stan licznika z początku dnia)."""
+    global midnight_counter_kwh, last_reset_day
     if os.path.exists(STATE_FILE):
         try:
             with open(STATE_FILE, 'r') as f:
                 state = json.load(f)
-                # Sprawdzamy, czy wczytany stan jest z dzisiaj
-                saved_day = state.get('day', -1)
-                current_day = datetime.now().day
-                
-                if saved_day == current_day:
-                    tagesertrag_kwh = state.get('tagesertrag_kWh', 0.0)
-                    last_reset_day = saved_day
-                    print(f"--- PRZYWRÓCONO STAN: {tagesertrag_kwh} kWh ---")
-                else:
-                    print("--- NOWY DZIEŃ: Reset licznika ---")
-                    tagesertrag_kwh = 0.0
-                    last_reset_day = current_day
+                midnight_counter_kwh = state.get('midnight_kwh', 0.0)
+                last_reset_day = state.get('day', -1)
+                logging.info(f"Stan wczytany. Start dnia: {midnight_counter_kwh} kWh")
         except Exception as e:
-            print(f"Błąd odczytu stanu: {e}")
-    else:
-        print("--- BRAK PLIKU STANU: Start od zera ---")
+            logging.error(f"Błąd odczytu stanu: {e}")
 
-def save_state():
-    """Zapisuje aktualny stan licznika do pliku."""
+def save_state(current_total_kwh):
+    """Zapisuje stan licznika (jako punkt odniesienia dla nowego dnia)."""
+    global midnight_counter_kwh, last_reset_day
+    now = datetime.now()
     try:
-        # Upewnij się, że katalog istnieje
         os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
-        
         state = {
-            'tagesertrag_kWh': tagesertrag_kwh,
-            'day': datetime.now().day,
-            'timestamp': int(time.time())
+            'midnight_kwh': current_total_kwh,
+            'day': now.day,
+            'updated': str(now)
         }
         with open(STATE_FILE, 'w') as f:
             json.dump(state, f)
+        
+        midnight_counter_kwh = current_total_kwh
+        last_reset_day = now.day
+        logging.info(f"ZAPISANO NOWY DZIEŃ. Start dnia ustawiony na: {current_total_kwh} kWh")
     except Exception as e:
-        print(f"Błąd zapisu stanu: {e}")
+        logging.error(f"Błąd zapisu stanu: {e}")
 
-def connect_mqtt():
-    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="pv_simulator_client")
+def get_modbus_data(client):
+    """Odczytuje rejestry z Eastron SDM120."""
+    data = {}
     try:
-        client.connect(MQTT_BROKER_HOST, 1883)
+        # Rejestry Input (Func 04) dla SDM120
+        # 0x0000: Voltage (V)
+        # 0x0006: Current (A)
+        # 0x000C: Active Power (W)
+        # 0x0156: Total Active Energy (kWh)
+        
+        # Czytamy parametry elektryczne
+        # 1. Napięcie (0x0000)
+        rr = client.read_input_registers(address=0x0000, count=2, slave=SLAVE_ID)
+        if not rr.isError():
+            data["spannung_V"] = round(BinaryPayloadDecoder.fromRegisters(rr.registers, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_float(), 2)
+        
+        # 2. Prąd (0x0006)
+        rr = client.read_input_registers(address=0x0006, count=2, slave=SLAVE_ID)
+        if not rr.isError():
+            data["strom_A"] = round(BinaryPayloadDecoder.fromRegisters(rr.registers, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_float(), 2)
+
+        # 3. Moc (0x000C)
+        rr = client.read_input_registers(address=0x000C, count=2, slave=SLAVE_ID)
+        if not rr.isError():
+            data["leistung_W"] = round(BinaryPayloadDecoder.fromRegisters(rr.registers, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_float(), 2)
+
+        # 4. Energia Całkowita (0x0156)
+        rr = client.read_input_registers(address=0x0156, count=2, slave=SLAVE_ID)
+        if not rr.isError():
+            data["total_kwh"] = round(BinaryPayloadDecoder.fromRegisters(rr.registers, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_float(), 4)
+
+        return data
+
     except Exception as e:
-        print(f"Błąd MQTT: {e}")
+        logging.error(f"Modbus Exception: {e}")
         return None
-    return client
 
-def get_seasonal_factor(now):
-    day_of_year = now.timetuple().tm_yday
-    return (math.cos(2 * math.pi * (day_of_year - 172) / 365) + 1) * 0.35 + 0.3
-
-def get_daily_curve_factor(now):
-    if not (SUNRISE_HOUR <= now.hour < SUNSET_HOUR):
-        return 0.0
-    day_progress = (now.hour + now.minute / 60 - SUNRISE_HOUR) / (SUNSET_HOUR - SUNRISE_HOUR)
-    return pow(math.sin(day_progress * math.pi), 1.5)
-
-def get_weather_factor():
-    # Prosta symulacja chmur
-    if random.random() < 0.05: return 0.4
-    return random.uniform(0.95, 1.0)
-
-def simulate_data(client):
-    global tagesertrag_kwh, last_reset_day, current_mpp_voltage
+def main():
+    global midnight_counter_kwh, last_reset_day
     
-    # 1. Wczytaj stan przy starcie
+    # 1. Load State
     load_state()
-    
-    client.loop_start()
-    
+
+    # 2. Setup MQTT
+    mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    try:
+        mqtt_client.connect(MQTT_BROKER, 1883, 60)
+        mqtt_client.loop_start()
+        logging.info(f"Połączono z MQTT: {MQTT_BROKER}")
+    except Exception as e:
+        logging.error(f"Błąd MQTT: {e}")
+        return
+
+    # 3. Setup Modbus
+    modbus_client = ModbusSerialClient(
+        port=MODBUS_PORT,
+        baudrate=MODBUS_BAUDRATE,
+        parity='N',
+        stopbits=1,
+        bytesize=8,
+        timeout=1
+    )
+
+    logging.info("Start pętli odczytu...")
+
     while True:
         try:
-            now = datetime.now()
+            # Connect Modbus
+            if not modbus_client.connect():
+                logging.warning("Brak połączenia z Modbus (USB). Ponawiam za 5s...")
+                time.sleep(5)
+                continue
 
-            # Reset o północy (jeśli skrypt działa ciągle)
-            if now.day != last_reset_day:
-                tagesertrag_kwh = 0.0
-                last_reset_day = now.day
-                save_state() # Zapisz reset
-
-            # --- Fizyka (Uproszczona) ---
-            seasonal = get_seasonal_factor(now)
-            daily = get_daily_curve_factor(now)
-            weather = get_weather_factor()
+            # Read Data
+            readings = get_modbus_data(modbus_client)
             
-            # Symulacja MPPT
-            current_mpp_voltage += random.uniform(-15.0, 15.0)
-            current_mpp_voltage = max(MPP_VOLTAGE_MIN, min(current_mpp_voltage, MPP_VOLTAGE_MAX))
-            voltage_efficiency = 1.0 - ((current_mpp_voltage - MPP_VOLTAGE_OPTIMAL) / (MPP_VOLTAGE_MAX - MPP_VOLTAGE_MIN))**2
+            if readings and "total_kwh" in readings:
+                current_total = readings["total_kwh"]
+                now = datetime.now()
+
+                # Sprawdzenie zmiany dnia (Reset licznika dziennego)
+                if last_reset_day != now.day:
+                    logging.info("Wykryto zmianę dnia. Resetuję licznik dzienny.")
+                    save_state(current_total)
+                
+                # Inicjalizacja przy pierwszym uruchomieniu
+                if midnight_counter_kwh == 0.0 and current_total > 0:
+                    save_state(current_total)
+
+                # Obliczenie produkcji dziennej
+                daily_yield = current_total - midnight_counter_kwh
+                if daily_yield < 0: daily_yield = 0.0 
+
+                # Przygotowanie JSON
+                payload = {
+                    "spannung_V": readings.get("spannung_V", 0.0),
+                    "strom_A": readings.get("strom_A", 0.0),
+                    "leistung_W": readings.get("leistung_W", 0.0),
+                    "tagesertrag_kWh": round(daily_yield, 3),
+                    "total_kWh": current_total,
+                    "timestamp": int(time.time())
+                }
+
+                # Wysyłka MQTT
+                mqtt_client.publish(MQTT_TOPIC, json.dumps(payload))
+                logging.info(f"Wysłano: {payload['leistung_W']}W | Dziś: {payload['tagesertrag_kWh']}kWh")
             
-            # Moc
-            leistung_w = MAX_POWER_W * seasonal * daily * weather * voltage_efficiency
-            leistung_w = max(0, leistung_w)
+            else:
+                logging.warning("Błąd odczytu danych z licznika.")
 
-            # Prąd
-            strom_a = leistung_w / current_mpp_voltage if current_mpp_voltage > 0 else 0
-
-            # Uzysk (całkowanie)
-            energie_intervall_wh = leistung_w * (SIMULATION_INTERVAL / 3600.0)
-            tagesertrag_kwh += energie_intervall_wh / 1000.0
-
-            # 2. Zapisz stan po każdej aktualizacji
-            save_state()
-
-            # Wysyłka
-            data = {
-                "spannung_V": round(current_mpp_voltage, 2),
-                "strom_A": round(strom_a, 2),
-                "leistung_W": round(leistung_w, 2),
-                "tagesertrag_kWh": round(tagesertrag_kwh, 4),
-                "timestamp": int(time.time())
-            }
-
-            client.publish(MQTT_TOPIC, json.dumps(data))
-            print(f"[{now.strftime('%H:%M:%S')}] P: {int(leistung_w)}W | Total: {tagesertrag_kwh:.3f} kWh")
-
-            time.sleep(SIMULATION_INTERVAL)
+            modbus_client.close()
+            time.sleep(5) 
 
         except KeyboardInterrupt:
             break
         except Exception as e:
-            print(f"Error: {e}")
+            logging.error(f"Błąd w pętli głównej: {e}")
             time.sleep(10)
 
-    client.loop_stop()
+    mqtt_client.loop_stop()
 
 if __name__ == "__main__":
-    mqtt_client = connect_mqtt()
-    if mqtt_client:
-        simulate_data(mqtt_client)
+    main()
