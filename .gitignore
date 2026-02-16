@@ -15,3 +15,9 @@ data/
 
 # Simulation data
 docker/pv_simulator_data/
+docker/pv_collector_data/
+*.bak
+test_modbus.py
+*.docx
+*.html
+

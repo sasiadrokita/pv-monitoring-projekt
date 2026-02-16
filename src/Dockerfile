@@ -15,4 +15,4 @@ COPY src/ .
 
 # Schritt 5: Den Befehl zum Starten der Anwendung definieren
 # Dieser Befehl wird ausgeführt, wenn der Container startet.
-CMD ["python", "pv_simulator.py"]
+CMD ["python", "pv_collector.py"]
