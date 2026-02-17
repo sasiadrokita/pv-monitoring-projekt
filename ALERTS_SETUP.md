@@ -17,9 +17,22 @@ This guide explains how to configure Grafana to send critical alerts to a Telegr
 3.  **Name** it (e.g., `Telegram Alerts`).
 4.  Add a new **Integration**, select `Telegram`.
 5.  Paste your **Bot API Token** and **Chat ID** into the respective fields.
-6.  Use the **`Test`** button to send a test notification. You should receive a message on Telegram.
-7.  **Save** the contact point.
-8.  (Recommended) Go to the **Notification policies** tab and set your new `Telegram Alerts` contact point as the **Default contact point**.
+6.  **(Recommended) Customize the message format**: 
+    -   Expand **Optional Telegram settings**.
+    -   In the **Message** field, paste the following template:
+        ```
+        {{ if eq .Status "firing" }}
+        {{ .CommonAnnotations.description }}
+        {{ else }}
+        ✅ RESOLVED: System is back online and sending data normally.
+        {{ end }}
+        ```
+    -   This template will:
+        -   Send only the alert description when the system fails (no labels/links)
+        -   Send a clean "resolved" message when the system recovers (without repeating the full alert)
+7.  Use the **`Test`** button to send a test notification. You should receive a message on Telegram.
+8.  **Save** the contact point.
+9.  (Recommended) Go to the **Notification policies** tab and set your new `Telegram Alerts` contact point as the **Default contact point**.
 
 ## Part 3: Create the "No Data" Alert Rule
 
@@ -43,8 +56,8 @@ This rule will trigger if no new data arrives from the PV system for a specified
         -   Set the condition to: `WHEN` `last()` `OF` `B` `IS BELOW` `1`.
 
 4.  **Define alert evaluation behavior:**
-    -   Set **`Evaluate every`** to `1m`.
-    -   Set **`For`** to `1m` (to avoid false positives).
+    -   Set **`Evaluate every`** to `30s` (for faster notifications).
+    -   Set **`For`** to `30s` (to avoid false positives while keeping response time quick).
     -   Under **"Configure no data and error handling"**, set both `If no data` and `If execution error` to **`Alerting`**. This is crucial.
 
 5.  **Add details:**
