@@ -71,13 +71,13 @@ def get_modbus_data(instrument):
         data["spannung_V"] = round(instrument.read_float(0, functioncode=4, number_of_registers=2), 2)
         
         # 2. Prąd (0x0006) -> 6
-        data["strom_A"] = round(instrument.read_float(6, functioncode=4, number_of_registers=2), 2)
+        data["strom_A"] = abs(round(instrument.read_float(6, functioncode=4, number_of_registers=2), 2))
 
         # 3. Moc (0x000C) -> 12
-        data["leistung_W"] = round(instrument.read_float(12, functioncode=4, number_of_registers=2), 2)
+        data["leistung_W"] = abs(round(instrument.read_float(12, functioncode=4, number_of_registers=2), 2))
 
         # 4. Energia Całkowita (0x0156) -> 342
-        data["total_kwh"] = round(instrument.read_float(342, functioncode=4, number_of_registers=2), 4)
+        data["total_kwh"] = abs(round(instrument.read_float(342, functioncode=4, number_of_registers=2), 4))
 
         return data
 
