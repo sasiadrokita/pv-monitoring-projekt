@@ -67,10 +67,25 @@ Das Projekt wird innerhalb der **IT-Infrastruktur** der EcoEnergy Solutions GmbH
 *   **Hardware:** Raspberry Pi 4 (4GB), SanDisk Extreme 32GB SD, Eastron SDM120-Modbus, FTDI USB-RS485 Adapter.
 *   **Software:** Raspberry Pi OS Lite (64-bit), Docker v24, InfluxDB v2.7, Grafana v11.
 
-### 1.1.4 Projektschnittstellen
-*   **Modbus RTU:** Kommunikation Zähler <-> Software (Adresse 001, 9600 Baud).
-*   **MQTT:** Interner Message Bus (`pv/anlage/data`).
-*   **HTTP/HTTPS:** Webinterfaces und API-Calls.
+### 1.1.4 Prozessschnittstellen
+
+**Auftraggeber & Ansprechpartner:**
+EcoEnergy Solutions GmbH
+(Beispielhafter Ansprechpartner: Herr Klaus Meyer, Technischer Leiter)
+Musterstraße 1, 12345 Musterstadt
+
+**Auftragnehmer & Ansprechpartner:**
+Mateusz Nowak (Auszubildender Fachinformatiker für Digitale Vernetzung)
+Berufsförderungswerk des DRK Birkenfeld
+Walter-Bleicker-Platz, 55765 Birkenfeld
+Tel.: +49 171 1110639
+E-Mail: mateusz.nowak.zabrze@gmail.com
+(Projektbetreuer: Heiko Grützner)
+
+**Ggf. weitere Beteiligte:**
+*   Lokaler IT-Administrator / Netzwerkverantwortlicher der EcoEnergy Solutions GmbH (für Netzwerkanpassungen, VLAN, Firewall-Freigaben gem. Vorgabe)
+*   Haustechnik / Facility Management (für Zutritt zum Serverraum und Technikraum)
+
 
 ### 1.1.5 Notwendige Änderungen gegenüber dem Projektantrag
 Es ergaben sich im Projektverlauf keine wesentlichen inhaltlichen oder zeitlichen Abweichungen vom genehmigten Projektantrag.

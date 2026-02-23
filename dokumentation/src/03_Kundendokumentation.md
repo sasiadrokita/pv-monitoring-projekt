@@ -1,11 +1,24 @@
 # PV-Monitoring System
-**Kundendokumentation (Benutzerhandbuch)**
+**Konzeption und Realisierung eines Monitoringsystems für PV-Bestandsanlagen auf Basis von IoT-Technologien**
 
 **Abschlussprüfung Sommer 2026**
-**Fachinformatiker für Digitale Vernetzung (AP T2)**
+**Ausbildungsberuf:** Fachinformatiker für Digitale Vernetzung (AP T2)
 
-**Prüfling:** Mateusz Nowak
-**Identnummer:** 141-13256
+**Prüfling:**
+Mateusz Nowak
+Identnummer: 141-13256
+E-Mail: mateusz.nowak.zabrze@gmail.com
+Tel.: +49 171 1110639
+
+**Ausbildungsbetrieb:**
+Berufsförderungswerk des DRK Birkenfeld
+Walter-Bleicker-Platz
+55765 Birkenfeld
+
+**Projektbetreuer:**
+Heiko Grützner
+E-Mail: h.gruetzner@e-s-b.org
+Tel.: +49 6782 18-1422
 
 ---
 
@@ -21,12 +34,10 @@ Dieses Handbuch erklärt Ihnen, wie Sie auf das System zugreifen, die Daten inte
 
 ## 3.2 Zugriff auf das System
 
-Das Monitoring-System ist über jeden Webbrowser (PC, Tablet, Smartphone) erreichbar.
-
-**URL:** `https://pv.eco-energy.com`
+Das Monitoring-System ist über jeden Webbrowser (PC, Tablet, Smartphone) erreichbar. Die genaue URL zum Zugriff wird Ihnen zur Sicherheit laufend über den **Monitoring-Bot in Telegram** direkt in den Benachrichtigungen angezeigt.
 
 ### 3.2.1 Anmeldung
-1.  Öffnen Sie die oben genannte URL.
+1.  Öffnen Sie die vom Bot genannte URL.
 2.  Geben Sie Ihre Zugangsdaten ein:
     *   **Benutzername:** `admin` (oder Ihr personalisierter Nutzer)
     *   **Passwort:** *(Wurde Ihnen bei der Übergabe mitgeteilt)*
@@ -58,8 +69,9 @@ Oben rechts finden Sie die Zeitauswahl (z.B. "Last 6 hours").
 Das System überwacht sich selbst. Sollte ein Fehler auftreten, erhalten Sie eine Nachricht via **Telegram**.
 
 **Wann werde ich benachrichtigt?**
-*   Wenn die Leistung tagsüber (zwischen 10:00 und 14:00 Uhr) plötzlich auf 0 Watt fällt.
 *   Wenn das System keine Daten mehr empfängt (länger als 15 Minuten).
+*   Während eines System-Neustarts (Reboots) des Monitorings.
+*   Nach der erfolgreichen Wiederherstellung (Rückkehr zum Normalbetrieb nach vorherigem Fehler oder Ausfall).
 
 **Was muss ich tun?**
 Prüfen Sie, ob es einen Stromausfall gibt oder ob der Wechselrichter eine Fehlermeldung anzeigt. Falls alles in Ordnung scheint, befolgen Sie Kapitel 3.5.
