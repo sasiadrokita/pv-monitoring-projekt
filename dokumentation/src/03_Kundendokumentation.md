@@ -1,31 +1,3 @@
-# PV-Monitoring System
-**Konzeption und Realisierung eines Monitoringsystems für PV-Bestandsanlagen auf Basis von IoT-Technologien**
-
-**Abschlussprüfung Sommer 2026**
-**Ausbildungsberuf:** Fachinformatiker für Digitale Vernetzung (AP T2)
-
-**Prüfling:**
-Mateusz Nowak
-Identnummer: 141-13256
-E-Mail: mateusz.nowak.zabrze@gmail.com
-Tel.: +49 171 1110639
-
-**Ausbildungsbetrieb:**
-Berufsförderungswerk des DRK Birkenfeld
-Walter-Bleicker-Platz
-55765 Birkenfeld
-
-**Projektbetreuer:**
-Heiko Grützner
-E-Mail: h.gruetzner@e-s-b.org
-Tel.: +49 6782 18-1422
-
----
-
-[TOC]
-
----
-
 # 3. Kundendokumentation (Benutzerhandbuch)
 
 ## 3.1 Einleitung
@@ -43,9 +15,13 @@ Das Monitoring-System ist über jeden Webbrowser (PC, Tablet, Smartphone) erreic
     *   **Passwort:** *(Wurde Ihnen bei der Übergabe mitgeteilt)*
 3.  Klicken Sie auf **"Log in"**.
 
+*[Platzhalter für Screenshot: Login-Bildschirm / Cloudflare Access]*
+
 ## 3.3 Bedienung des Dashboards
 
 Nach dem Login sehen Sie die Hauptübersicht ("Dashboard").
+
+*[Platzhalter für Screenshot: Hauptansicht Grafana Dashboard]*
 
 ### 3.3.1 Die Elemente im Überblick
 *   **Aktuelle Leistung (Watt):** Tachometer-Anzeige, die die momentane Leistung anzeigt.
@@ -58,6 +34,8 @@ Nach dem Login sehen Sie die Hauptübersicht ("Dashboard").
     *   Leistungsverlauf
     *   Stromverlauf
     *   Verlauf des Gesamtertrags (Total kWh)
+
+*[Platzhalter für Screenshot: Detailansicht der Diagramme im Dashboard]*
 
 ### 3.3.2 Zeitbereich ändern
 Oben rechts finden Sie die Zeitauswahl (z.B. "Last 6 hours").
@@ -72,6 +50,8 @@ Das System überwacht sich selbst. Sollte ein Fehler auftreten, erhalten Sie ein
 *   Wenn das System keine Daten mehr empfängt (länger als 15 Minuten).
 *   Während eines System-Neustarts (Reboots) des Monitorings.
 *   Nach der erfolgreichen Wiederherstellung (Rückkehr zum Normalbetrieb nach vorherigem Fehler oder Ausfall).
+
+*[Platzhalter für Screenshot: Beispiel einer Telegram-Alarmmeldung]*
 
 **Was muss ich tun?**
 Prüfen Sie, ob es einen Stromausfall gibt oder ob der Wechselrichter eine Fehlermeldung anzeigt. Falls alles in Ordnung scheint, befolgen Sie Kapitel 3.5.
