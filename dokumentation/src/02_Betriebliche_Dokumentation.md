@@ -1,31 +1,3 @@
-# PV-Monitoring System
-**Konzeption und Realisierung eines Monitoringsystems für PV-Bestandsanlagen auf Basis von IoT-Technologien**
-
-**Abschlussprüfung Sommer 2026**
-**Ausbildungsberuf:** Fachinformatiker für Digitale Vernetzung (AP T2)
-
-**Prüfling:**
-Mateusz Nowak
-Identnummer: 141-13256
-E-Mail: mateusz.nowak.zabrze@gmail.com
-Tel.: +49 171 1110639
-
-**Ausbildungsbetrieb:**
-Berufsförderungswerk des DRK Birkenfeld
-Walter-Bleicker-Platz
-55765 Birkenfeld
-
-**Projektbetreuer:**
-Heiko Grützner
-E-Mail: h.gruetzner@e-s-b.org
-Tel.: +49 6782 18-1422
-
----
-
-[TOC]
-
----
-
 # 2. Betriebliche Dokumentation
 
 Die vorliegende betriebliche Dokumentation beschreibt die technische Konfiguration des im Projektbericht behandelten PV-Monitoringsystems gemäß den Vorgaben. Sie dient Administratoren als Nachschlagewerk für den laufenden Betrieb, die Wartung und die Fehlerbehebung. Gemäß den Anforderungen wird auf eine ausführliche Systembedienungs-Anleitung verzichtet und stattdessen der Fokus auf die konkreten Konfigurationsparameter gelegt.
@@ -44,7 +16,6 @@ Die Hardware ist im zentralen Serverschrank (Rack 2, HE 14) platziert und über 
 **Pin-Belegung (RS485 - CAT7 Leitungsverbindung):**
 *   **A+ (Zähler):** Pin 1
 *   **B- (Zähler):** Pin 2
-*   **GND (Zähler):** Pin 3 (Schirmung aufgelegt zur Reduzierung von Störeinflüssen)
 
 ## 2.2 Eingesetzte Betriebssysteme und Software
 
@@ -61,29 +32,22 @@ Das System ist modular mittels Container-Technologie aufgebaut. Alle Container s
 | **Visualisierung** | Grafana v11.0 | Web-Dashboard und Alerting |
 | **Fernzugriff** | cloudflared | Sicherer HTTPS-Tunnel ohne Portfreigabe |
 
-## 2.3 Netzwerk und IP-Adressen
+## 2.3 Netzwerk-Integration
 
-Das IoT-System ist aus Sicherheitsgründen in einem separaten virtuellen LAN (VLAN) isoliert.
+Die Bereitstellung und Konfiguration der lokalen Netzwerkinfrastruktur obliegt dem lokalen Netzwerkadministrator des Kunden (EcoSolutions). Das PV-Monitoringsystem wird als Endgerät („Plug-and-Play“) in das bestehende Firmennetzwerk integriert.
 
-| Parameter | Wert / Konfiguration |
-| :--- | :--- |
-| **Netzwerksegment** | VLAN 20 (IoT) |
-| **Hostname** | `pv-monitor` |
-| **IP-Adresse (IPv4)**| `192.168.178.50` (Statisch via DHCP-Reservierung im Gateway) |
-| **Subnetzmaske** | `255.255.255.0` (/24) |
-| **Standard-Gateway**| `192.168.178.1` (UniFi Dream Machine) |
-| **DNS-Server** | `192.168.178.1` |
-| **Interne Ports** | `22` (SSH TCP), `1883` (MQTT TCP), `3000` (Grafana TCP), `8086` (InfluxDB TCP) |
+Die physische Anbindung des Servers erfolgt über ein vom Kunden fertig konfektioniertes und bereitgestelltes RJ45-Netzwerkkabel.
 
-### 2.3.1 Firewallregeln (Gateway)
-Die Kommunikation wird durch die zentrale Firewall restriktiv gesteuert (Zero-Trust-Ansatz für IoT):
-*   **Ausgehend (Outbound):** Nur HTTPS (Port `443`) zu Cloudflare (für den Tunnel und Updates) sowie NTP (Port `123`) für die Zeitsynchronisierung erlaubt.
-*   **Eingehend (Inbound):** Sämtlicher eingehender Traffic aus externen Netzen in das VLAN 20 ist blockiert (`DROP`). Der Zugriff von extern erfolgt ausschließlich reverse über den etablierten Cloudflare-Tunnel.
-*   **Intern:** Zugriff via SSH (Port `22`) nur aus dem Administrations-VLAN erlaubt.
+*   **IP-Vergabe:** Die Adresszuweisung (IP-Adresse, Subnetzmaske, Gateway, DNS) erfolgt automatisch via DHCP durch den lokalen Router bzw. den DHCP-Server von EcoSolutions. Es ist systemseitig keine statische IP-Adresse konfiguriert.
+*   **Hostname:** `pv-monitor`
+*   **Intern offene Ports (Systemseitig):** `22` (SSH TCP), `1883` (MQTT TCP), `3000` (Grafana TCP), `8086` (InfluxDB TCP)
+
+**Hinweis zur Firewall und Isolation:**
+Für die korrekte Funktion des Fernzugriffs via Cloudflared muss das System ausgehende Verbindungen über HTTPS (Port `443`) aufbauen können. Darüber hinaus wird ausgehender Traffic für NTP (Port `123`) zur Zeitsynchronisierung benötigt. Eingehende Verbindungen (Portweiterleitungen aus dem Internet) müssen auf der lokalen Firewall nicht konfiguriert werden. Die exakte Absicherung des Systems (z. B. durch Isolierung in einem separaten VLAN für IoT-Geräte) liegt im Ermessen der lokalen IT-Administration von EcoSolutions.
 
 ## 2.4 Zentrale Konfigurationsdateien
 
-Das gesamte System wird deklarativ über Docker Compose konfiguriert. Der Projektpfad lautet `/home/mateusz/Documents/Workspace/PV-monitoring/`.
+Das gesamte System wird deklarativ über Docker Compose konfiguriert.
 
 ### 2.4.1 Container-Orchestrierung (`docker-compose.yml`)
 Auszug der wesentlichen Parameter für Netzwerk und Persistenz:

@@ -59,9 +59,8 @@ Das Projekt wird innerhalb der **IT-Infrastruktur** der EcoEnergy Solutions GmbH
 *   **Verkabelung:** Bestehende CAT7-Leitung wird für die RS485-Kommunikation genutzt.
 
 **Netzwerkumgebung:**
-*   **VLAN 20 (IoT):** Isoliertes Netzwerksegment für den Raspberry Pi.
-*   **IP:** Statisch `192.168.178.50`.
-*   **Firewall:** Blockiert eingehenden Traffic; Raspberry Pi nutzt nur ausgehende Verbindungen (Cloudflare).
+*   **Netzwerk-Integration:** Einbindung über kundenseitig bereitgestelltes RJ45-Kabel (DHCP). Konfiguration (VLAN, IP) erfolgt durch den lokalen IT-Administrator.
+*   **Firewall:** Keine eingehenden Portweiterleitungen erforderlich; Raspberry Pi nutzt nur ausgehende Verbindungen (Cloudflare, NTP).
 
 **Technische Ressourcen:**
 *   **Hardware:** Raspberry Pi 4 (4GB), SanDisk Extreme 32GB SD, Eastron SDM120-Modbus, FTDI USB-RS485 Adapter.
@@ -83,7 +82,7 @@ E-Mail: mateusz.nowak.zabrze@gmail.com
 (Projektbetreuer: Heiko Grützner)
 
 **Ggf. weitere Beteiligte:**
-*   Lokaler IT-Administrator / Netzwerkverantwortlicher der EcoEnergy Solutions GmbH (für Netzwerkanpassungen, VLAN, Firewall-Freigaben gem. Vorgabe)
+*   Lokaler IT-Administrator / Netzwerkverantwortlicher der EcoEnergy Solutions GmbH (für die Bereitstellung des Netzwerkkabels und die Integration ins lokale Firmennetz via DHCP)
 *   Haustechnik / Facility Management (für Zutritt zum Serverraum und Technikraum)
 
 
